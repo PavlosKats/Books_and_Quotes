@@ -68,6 +68,11 @@ public class QuotesController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+        if (!await BookExistsForUser(dto.BookId, userId))
+        {
+            return BadRequest("Invalid bookId.");
+        }
+
         var quote = new Quote
         {
             Content = dto.Content,
@@ -103,6 +108,11 @@ public class QuotesController : ControllerBase
             return NotFound();
         }
 
+        if (!await BookExistsForUser(dto.BookId, userId))
+        {
+            return BadRequest("Invalid bookId.");
+        }
+
         quote.Content = dto.Content;
         quote.Author = dto.Author;
         quote.BookId = dto.BookId;
@@ -129,5 +139,16 @@ public class QuotesController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    private async Task<bool> BookExistsForUser(int? bookId, string? userId)
+    {
+        if (!bookId.HasValue)
+        {
+            return true;
+        }
+
+        return await _context.Books
+            .AnyAsync(book => book.Id == bookId.Value && book.UserId == userId);
     }
 }
