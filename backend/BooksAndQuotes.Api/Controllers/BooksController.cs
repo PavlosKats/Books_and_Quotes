@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BooksAndQuotes.Api.Data;
+using BooksAndQuotes.Api.DTOs;
 using BooksAndQuotes.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,93 +13,131 @@ namespace BooksAndQuotes.Api.Controllers;
 [Authorize]
 public class BooksController : ControllerBase
 {
-	private readonly AppDbContext _context;
+    private readonly AppDbContext _context;
 
-	public BooksController(AppDbContext context)
-	{
-		_context = context;
-	}
+    public BooksController(AppDbContext context)
+    {
+        _context = context;
+    }
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<BookResponseDto>>> GetBooks()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		var books = await _context.Books
-			.Where(book => book.UserId == userId)
-			.ToListAsync();
+        var books = await _context.Books
+            .Where(book => book.UserId == userId)
+            .Select(book => new BookResponseDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                Author = book.Author,
+                YearPublished = book.YearPublished,
+                Isbn = book.Isbn,
+                CoverImageUrl = book.CoverImageUrl
+            })
+            .ToListAsync();
 
-		return Ok(books);
-	}
+        return Ok(books);
+    }
 
-	[HttpGet("{id}")]
-	public async Task<ActionResult<Book>> GetBook(int id)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpGet("{id}")]
+    public async Task<ActionResult<BookResponseDto>> GetBook(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		var book = await _context.Books
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        var book = await _context.Books
+            .Where(item => item.Id == id && item.UserId == userId)
+            .Select(item => new BookResponseDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                Author = item.Author,
+                YearPublished = item.YearPublished,
+                Isbn = item.Isbn,
+                CoverImageUrl = item.CoverImageUrl
+            })
+            .FirstOrDefaultAsync();
 
-		if (book == null)
-		{
-			return NotFound();
-		}
+        if (book == null)
+        {
+            return NotFound();
+        }
 
-		return Ok(book);
-	}
+        return Ok(book);
+    }
 
-	[HttpPost]
-	public async Task<ActionResult<Book>> CreateBook(Book book)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		book.UserId = userId;
+    [HttpPost]
+    public async Task<ActionResult<BookResponseDto>> CreateBook(BookCreateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_context.Books.Add(book);
-		await _context.SaveChangesAsync();
+        var book = new Book
+        {
+            Title = dto.Title,
+            Author = dto.Author,
+            YearPublished = dto.YearPublished,
+            Isbn = dto.Isbn,
+            CoverImageUrl = dto.CoverImageUrl,
+            UserId = userId
+        };
 
-		return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
-	}
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
 
-	[HttpPut("{id}")]
-	public async Task<IActionResult> UpdateBook(int id, Book book)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var response = new BookResponseDto
+        {
+            Id = book.Id,
+            Title = book.Title,
+            Author = book.Author,
+            YearPublished = book.YearPublished,
+            Isbn = book.Isbn,
+            CoverImageUrl = book.CoverImageUrl
+        };
 
-		var existingBook = await _context.Books
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        return CreatedAtAction(nameof(GetBook), new { id = book.Id }, response);
+    }
 
-		if (existingBook == null)
-		{
-			return NotFound();
-		}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateBook(int id, BookUpdateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		existingBook.Title = book.Title;
-		existingBook.Author = book.Author;
-		existingBook.YearPublished = book.YearPublished;
-		existingBook.Isbn = book.Isbn;
-		existingBook.CoverImageUrl = book.CoverImageUrl;
+        var book = await _context.Books
+            .FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
 
-		await _context.SaveChangesAsync();
+        if (book == null)
+        {
+            return NotFound();
+        }
 
-		return NoContent();
-	}
+        book.Title = dto.Title;
+        book.Author = dto.Author;
+        book.YearPublished = dto.YearPublished;
+        book.Isbn = dto.Isbn;
+        book.CoverImageUrl = dto.CoverImageUrl;
 
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> DeleteBook(int id)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        await _context.SaveChangesAsync();
 
-		var book = await _context.Books
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        return NoContent();
+    }
 
-		if (book == null)
-		{
-			return NotFound();
-		}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBook(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_context.Books.Remove(book);
-		await _context.SaveChangesAsync();
+        var book = await _context.Books
+            .FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
 
-		return NoContent();
-	}
+        if (book == null)
+        {
+            return NotFound();
+        }
+
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

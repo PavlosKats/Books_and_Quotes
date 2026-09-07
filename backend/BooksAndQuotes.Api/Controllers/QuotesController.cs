@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using BooksAndQuotes.Api.Data;
+using BooksAndQuotes.Api.DTOs;
 using BooksAndQuotes.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,91 +13,121 @@ namespace BooksAndQuotes.Api.Controllers;
 [Authorize]
 public class QuotesController : ControllerBase
 {
-	private readonly AppDbContext _context;
+    private readonly AppDbContext _context;
 
-	public QuotesController(AppDbContext context)
-	{
-		_context = context;
-	}
+    public QuotesController(AppDbContext context)
+    {
+        _context = context;
+    }
 
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<Quote>>> GetQuotes()
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<QuoteResponseDto>>> GetQuotes()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		var quotes = await _context.Quotes
-			.Where(quote => quote.UserId == userId)
-			.ToListAsync();
+        var quotes = await _context.Quotes
+            .Where(quote => quote.UserId == userId)
+            .Select(quote => new QuoteResponseDto
+            {
+                Id = quote.Id,
+                Content = quote.Content,
+                Author = quote.Author,
+                BookId = quote.BookId
+            })
+            .ToListAsync();
 
-		return Ok(quotes);
-	}
+        return Ok(quotes);
+    }
 
-	[HttpGet("{id}")]
-	public async Task<ActionResult<Quote>> GetQuote(int id)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    [HttpGet("{id}")]
+    public async Task<ActionResult<QuoteResponseDto>> GetQuote(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		var quote = await _context.Quotes
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        var quote = await _context.Quotes
+            .Where(item => item.Id == id && item.UserId == userId)
+            .Select(item => new QuoteResponseDto
+            {
+                Id = item.Id,
+                Content = item.Content,
+                Author = item.Author,
+                BookId = item.BookId
+            })
+            .FirstOrDefaultAsync();
 
-		if (quote == null)
-		{
-			return NotFound();
-		}
+        if (quote == null)
+        {
+            return NotFound();
+        }
 
-		return Ok(quote);
-	}
+        return Ok(quote);
+    }
 
-	[HttpPost]
-	public async Task<ActionResult<Quote>> CreateQuote(Quote quote)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-		quote.UserId = userId;
+    [HttpPost]
+    public async Task<ActionResult<QuoteResponseDto>> CreateQuote(QuoteCreateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_context.Quotes.Add(quote);
-		await _context.SaveChangesAsync();
+        var quote = new Quote
+        {
+            Content = dto.Content,
+            Author = dto.Author,
+            BookId = dto.BookId,
+            UserId = userId
+        };
 
-		return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, quote);
-	}
+        _context.Quotes.Add(quote);
+        await _context.SaveChangesAsync();
 
-	[HttpPut("{id}")]
-	public async Task<IActionResult> UpdateQuote(int id, Quote quote)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var response = new QuoteResponseDto
+        {
+            Id = quote.Id,
+            Content = quote.Content,
+            Author = quote.Author,
+            BookId = quote.BookId
+        };
 
-		var existingQuote = await _context.Quotes
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        return CreatedAtAction(nameof(GetQuote), new { id = quote.Id }, response);
+    }
 
-		if (existingQuote == null)
-		{
-			return NotFound();
-		}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateQuote(int id, QuoteUpdateDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		existingQuote.Content = quote.Content;
-		existingQuote.Author = quote.Author;
-		existingQuote.BookId = quote.BookId;
+        var quote = await _context.Quotes
+            .FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
 
-		await _context.SaveChangesAsync();
+        if (quote == null)
+        {
+            return NotFound();
+        }
 
-		return NoContent();
-	}
+        quote.Content = dto.Content;
+        quote.Author = dto.Author;
+        quote.BookId = dto.BookId;
 
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> DeleteQuote(int id)
-	{
-		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        await _context.SaveChangesAsync();
 
-		var quote = await _context.Quotes
-			.FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
+        return NoContent();
+    }
 
-		if (quote == null)
-		{
-			return NotFound();
-		}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteQuote(int id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-		_context.Quotes.Remove(quote);
-		await _context.SaveChangesAsync();
+        var quote = await _context.Quotes
+            .FirstOrDefaultAsync(item => item.Id == id && item.UserId == userId);
 
-		return NoContent();
-	}
+        if (quote == null)
+        {
+            return NotFound();
+        }
+
+        _context.Quotes.Remove(quote);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }
