@@ -6,11 +6,11 @@ frontend/.cache/
 frontend/*.log
 
 # .NET
-backend/bin/
-backend/obj/
-backend/*.user
-backend/*.suo
-backend/*.log
+**/bin/
+**/obj/
+*.user
+*.suo
+*.log
 
 # OS and editor
 .DS_Store
