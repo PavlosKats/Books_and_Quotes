@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand navbar-dark bg-dark px-3">
+  <a class="navbar-brand text-white text-decoration-none" routerLink="/">
+    Books and Quotes
+  </a>
+
+  <div class="navbar-nav ms-auto">
+    <a class="nav-link text-white" routerLink="/login" routerLinkActive="active">
+      Login
+    </a>
+    <a class="nav-link text-white" routerLink="/register" routerLinkActive="active">
+      Register
+    </a>
+    <a class="nav-link text-white" routerLink="/books" routerLinkActive="active">
+      Books
+    </a>
+    <a class="nav-link text-white" routerLink="/quotes" routerLinkActive="active">
+      Quotes
+    </a>
+    <button
+      *ngIf="authService.isLoggedIn()"
+      class="btn btn-outline-light ms-3"
+      type="button"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+  </div>
+</nav>
+
+
+<router-outlet></router-outlet>
