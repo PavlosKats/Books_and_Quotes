@@ -37,6 +37,26 @@
   padding: 1.5rem 0 3rem;
 }
 
+.app-theme-toggle {
+  border-radius: 999px;
+  font-weight: 600;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.app-theme-toggle:hover {
+  transform: translateY(-1px);
+}
+
+body.dark-theme .app-theme-toggle {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #e5e7eb;
+}
+
+body.dark-theme .app-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
 .modal-content {
   border-radius: 20px;
 }
