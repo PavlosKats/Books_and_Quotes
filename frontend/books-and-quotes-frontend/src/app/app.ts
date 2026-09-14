@@ -4,6 +4,7 @@ import { RouterOutlet, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,4 +22,18 @@ export class App {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+
+  closeNavbar(): void {
+  const navbar = document.getElementById('mainNav');
+  const toggler = document.querySelector<HTMLButtonElement>('.navbar-toggler');
+
+  if (!navbar || !toggler) {
+    return;
+  }
+
+  if (navbar.classList.contains('show')) {
+    toggler.click();
+  }
+}
 }

@@ -1,64 +1,81 @@
-<div class="container mt-5" style="max-width: 600px;">
-  <div class="card shadow-sm">
-    <div class="card-body p-4">
-      <h2 class="mb-4">
-        <i class="fa-solid fa-pen-to-square me-2"></i>
-        {{ id === null ? 'Add Quote' : 'Edit Quote' }}
-      </h2>
-
-      <div *ngIf="errorMessage" class="alert alert-danger">
-        {{ errorMessage }}
-      </div>
-
-      <div *ngIf="validationMessage" class="alert alert-warning">
-        {{ validationMessage }}
-      </div>
-
-      <form (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="content" class="form-label">Quote</label>
-          <textarea
-            id="content"
-            class="form-control"
-            name="content"
-            rows="4"
-            [(ngModel)]="content"
-            required
-          ></textarea>
-          <div class="text-danger mt-1" *ngIf="submitted && !content">
-            Quote is required.
+<div class="container py-4 py-lg-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8 col-xl-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-lg-5">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="form-icon text-bg-warning text-white">
+              <i class="fa-solid fa-quote-left"></i>
+            </div>
+            <div>
+              <h2 class="mb-1 fw-bold">{{ id === null ? 'Add Quote' : 'Edit Quote' }}</h2>
+              <p class="text-muted mb-0">Capture your favorite lines and authors.</p>
+            </div>
           </div>
-        </div>
 
-        <div class="mb-3">
-          <label for="author" class="form-label">Author</label>
-          <input
-            type="text"
-            id="author"
-            class="form-control"
-            name="author"
-            [(ngModel)]="author"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label for="bookId" class="form-label">Book ID</label>
-          <input
-            type="number"
-            id="bookId"
-            class="form-control"
-            name="bookId"
-            [(ngModel)]="bookId"
-          />
-          <div class="form-text">
-            Optional. Leave blank if this quote is not tied to a book.
+          <div *ngIf="errorMessage" class="alert alert-danger border-0 shadow-sm">
+            {{ errorMessage }}
           </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary">
-          Save Quote
-        </button>
-      </form>
+          <div *ngIf="validationMessage" class="alert alert-warning border-0 shadow-sm">
+            {{ validationMessage }}
+          </div>
+
+          <form (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="content" class="form-label fw-semibold">Quote</label>
+              <textarea
+                id="content"
+                class="form-control"
+                name="content"
+                rows="5"
+                [(ngModel)]="content"
+                required
+              ></textarea>
+              <div class="text-danger mt-1 small" *ngIf="submitted && !content">
+                Quote is required.
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-md-6 mb-3">
+                <label for="author" class="form-label fw-semibold">Author</label>
+                <input
+                  type="text"
+                  id="author"
+                  class="form-control"
+                  name="author"
+                  [(ngModel)]="author"
+                />
+              </div>
+
+              <div class="col-12 col-md-6 mb-3">
+                <label for="bookId" class="form-label fw-semibold">Book ID</label>
+                <input
+                  type="number"
+                  id="bookId"
+                  class="form-control"
+                  name="bookId"
+                  [(ngModel)]="bookId"
+                />
+                <div class="form-text">
+                  Optional. Leave blank if this quote is not tied to a book.
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="fa-solid fa-floppy-disk me-2"></i>
+                Save Quote
+              </button>
+              <a routerLink="/quotes" class="btn btn-outline-secondary px-4">
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>

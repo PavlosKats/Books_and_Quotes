@@ -15,6 +15,7 @@ export class BookList implements OnInit {
 
   books: Book[] = [];
   errorMessage = '';
+  pendingDeleteBook: Book | null = null;
 
   ngOnInit(): void {
     this.loadBooks();
@@ -31,17 +32,30 @@ export class BookList implements OnInit {
     });
   }
 
-  deleteBook(id: number): void {
-  const confirmed = window.confirm('Are you sure you want to delete this book?');
-  if (!confirmed) {
-    return;
+  askDeleteBook(book: Book): void {
+    this.pendingDeleteBook = book;
   }
 
-  this.bookService.deleteBook(id).subscribe({
-    next: () => this.loadBooks(),
-    error: () => {
-      this.errorMessage = 'Failed to delete book.';
-    },
-  });
-}
+  cancelDelete(): void {
+    this.pendingDeleteBook = null;
+  }
+
+  confirmDelete(): void {
+    if (!this.pendingDeleteBook) {
+      return;
+    }
+
+    const bookId = this.pendingDeleteBook.id;
+
+    this.bookService.deleteBook(bookId).subscribe({
+      next: () => {
+        this.pendingDeleteBook = null;
+        this.loadBooks();
+      },
+      error: () => {
+        this.errorMessage = 'Failed to delete book.';
+        this.pendingDeleteBook = null;
+      },
+    });
+  }
 }

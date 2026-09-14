@@ -1,0 +1,103 @@
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff !important;
+}
+
+.app-nav-link {
+  color: rgba(255, 255, 255, 0.82) !important;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.app-nav-link:hover,
+.app-nav-link.active {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.app-logout {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.app-shell {
+  padding: 1.5rem 0 3rem;
+}
+
+.modal-content {
+  border-radius: 20px;
+}
+
+.modal-backdrop.show {
+  opacity: 0.55;
+}
+
+@media (max-width: 991.98px) {
+  .app-navbar .navbar-collapse {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.96);
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+  }
+
+  .app-navbar .navbar-nav {
+    width: 100%;
+  }
+
+  .app-navbar .nav-link,
+  .app-navbar .btn {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .app-shell {
+    padding: 1rem 0 2rem;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .container.py-4.py-lg-5 {
+    padding-top: 1rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .app-brand {
+    font-size: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .modal-dialog {
+    margin: 1rem;
+  }
+
+  .modal-content {
+    border-radius: 18px;
+  }
+}

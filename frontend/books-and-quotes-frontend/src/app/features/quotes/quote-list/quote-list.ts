@@ -15,6 +15,7 @@ export class QuoteList implements OnInit {
 
   quotes: Quote[] = [];
   errorMessage = '';
+  pendingDeleteQuote: Quote | null = null;
 
   ngOnInit(): void {
     this.loadQuotes();
@@ -31,16 +32,29 @@ export class QuoteList implements OnInit {
     });
   }
 
-  deleteQuote(id: number): void {
-    const confirmed = window.confirm('Are you sure you want to delete this quote?');
-    if (!confirmed) {
+  askDeleteQuote(quote: Quote): void {
+    this.pendingDeleteQuote = quote;
+  }
+
+  cancelDelete(): void {
+    this.pendingDeleteQuote = null;
+  }
+
+  confirmDelete(): void {
+    if (!this.pendingDeleteQuote) {
       return;
     }
 
-    this.quoteService.deleteQuote(id).subscribe({
-      next: () => this.loadQuotes(),
+    const quoteId = this.pendingDeleteQuote.id;
+
+    this.quoteService.deleteQuote(quoteId).subscribe({
+      next: () => {
+        this.pendingDeleteQuote = null;
+        this.loadQuotes();
+      },
       error: () => {
         this.errorMessage = 'Failed to delete quote.';
+        this.pendingDeleteQuote = null;
       },
     });
   }

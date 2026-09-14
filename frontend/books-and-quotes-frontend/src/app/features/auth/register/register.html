@@ -6,6 +6,14 @@
         Register
       </h2>
 
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="validationMessage" class="alert alert-warning">
+        {{ validationMessage }}
+      </div>
+
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
@@ -17,6 +25,9 @@
             [(ngModel)]="username"
             required
           />
+          <div class="text-danger mt-1 small" *ngIf="submitted && !username">
+            Username is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -29,10 +40,15 @@
             [(ngModel)]="password"
             required
           />
-        </div>
-
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
+          <div class="form-text">
+            Password must be at least 8 characters long and include at least one number and one symbol.
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="submitted && !password">
+            Password is required.
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="submitted && password && !passwordHasNumberAndSymbol">
+            Password must include at least one number and one symbol.
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">

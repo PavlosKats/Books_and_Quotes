@@ -1,10 +1,22 @@
 <div class="container mt-5" style="max-width: 420px;">
   <div class="card shadow-sm">
     <div class="card-body p-4">
-      <h2 class="text-center mb-4">
+      <h2 class="text-center mb-2">
         <i class="fa-solid fa-right-to-bracket me-2"></i>
         Login
       </h2>
+
+      <p class="text-center text-muted mb-4">
+        Use the username and password you registered with.
+      </p>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="validationMessage" class="alert alert-warning">
+        {{ validationMessage }}
+      </div>
 
       <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
@@ -17,6 +29,9 @@
             [(ngModel)]="username"
             required
           />
+          <div class="text-danger mt-1 small" *ngIf="submitted && !username">
+            Username is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -29,10 +44,9 @@
             [(ngModel)]="password"
             required
           />
-        </div>
-
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
+          <div class="text-danger mt-1 small" *ngIf="submitted && !password">
+            Password is required.
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">
