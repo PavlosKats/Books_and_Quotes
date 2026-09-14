@@ -4,7 +4,6 @@ import { RouterOutlet, Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class App {
   protected readonly title = signal('books-and-quotes-frontend');
-  
+
   authService = inject(AuthService);
   private router = inject(Router);
 
@@ -29,7 +28,6 @@ export class App {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 
   closeNavbar(): void {
     const navbar = document.getElementById('mainNav');
