@@ -31,10 +31,19 @@
       </a>
 
       <button
+        class="btn btn-sm btn-outline-light app-theme-toggle ms-lg-2 d-flex align-items-center justify-content-center gap-2"
+        type="button"
+        (click)="toggleTheme()"
+      >
+        <i class="fa-solid" [ngClass]="isDarkTheme() ? 'fa-sun' : 'fa-moon'"></i>
+        <span>{{ isDarkTheme() ? 'Light' : 'Dark' }}</span>
+      </button>
+
+      <button
         *ngIf="authService.isLoggedIn()"
         class="btn btn-sm btn-light app-logout ms-lg-2 d-flex align-items-center justify-content-center gap-2"
         type="button"
-        (click)=" closeNavbar(); logout()"
+        (click)="closeNavbar(); logout()"
       >
         <i class="fa-solid fa-right-from-bracket"></i>
         <span>Logout</span>
