@@ -1,0 +1,60 @@
+<div class="container mt-5" style="max-width: 420px;">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <h2 class="text-center mb-4">
+        <i class="fa-solid fa-user-plus me-2"></i>
+        Register
+      </h2>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="validationMessage" class="alert alert-warning">
+        {{ validationMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            name="username"
+            [(ngModel)]="username"
+            required
+          />
+          <div class="text-danger mt-1 small" *ngIf="submitted && !username">
+            Username is required.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            name="password"
+            [(ngModel)]="password"
+            required
+          />
+          <div class="form-text">
+            Password must be at least 8 characters long and include at least one number and one symbol.
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="submitted && !password">
+            Password is required.
+          </div>
+          <div class="text-danger mt-1 small" *ngIf="submitted && password && !passwordHasNumberAndSymbol">
+            Password must include at least one number and one symbol.
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+          Register
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

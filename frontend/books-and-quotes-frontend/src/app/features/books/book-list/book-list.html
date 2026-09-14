@@ -1,0 +1,109 @@
+<div class="container py-4 py-lg-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <span class="badge text-bg-primary-subtle text-primary-emphasis rounded-pill mb-2 px-3 py-2">
+        <i class="fa-solid fa-book me-2"></i>
+        Collection
+      </span>
+      <h2 class="mb-1 fw-bold">My Books</h2>
+      <p class="text-muted mb-0">Manage your personal reading collection.</p>
+    </div>
+
+    <a class="btn btn-primary px-4 d-inline-flex align-items-center gap-2" routerLink="/books/new">
+      <i class="fa-solid fa-plus"></i>
+      <span>Add Book</span>
+    </a>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="books.length === 0 && !errorMessage" class="card shadow-sm border-0">
+    <div class="card-body text-center py-5 py-lg-6">
+      <i class="fa-solid fa-book-open text-primary fs-1 mb-3"></i>
+      <h5 class="fw-semibold mb-2">No books yet</h5>
+      <p class="text-muted mb-4">Add your first book to start building your collection.</p>
+      <a class="btn btn-primary px-4" routerLink="/books/new">
+        <i class="fa-solid fa-plus me-2"></i>
+        Add Book
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4" *ngIf="books.length > 0">
+    <div class="col-12 col-lg-6" *ngFor="let book of books">
+      <div class="card h-100 shadow-sm border-0 book-card">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            <div>
+              <h5 class="card-title fw-bold mb-1">{{ book.title }}</h5>
+              <p class="text-muted mb-0">
+                <i class="fa-solid fa-user-pen me-2"></i>
+                {{ book.author }}
+              </p>
+            </div>
+            <span class="badge rounded-pill text-bg-light text-secondary border">
+              <i class="fa-solid fa-hashtag me-1"></i>
+              {{ book.yearPublished }}
+            </span>
+          </div>
+
+          <p class="card-text mb-3">
+            <span class="text-muted d-block mb-1">ISBN</span>
+            <span class="fw-semibold">{{ book.isbn }}</span>
+          </p>
+
+          <div *ngIf="book.coverImageUrl" class="mb-3">
+            <a [href]="book.coverImageUrl" target="_blank" rel="noreferrer" class="small text-decoration-none">
+              <i class="fa-solid fa-image me-2"></i>Open cover image
+            </a>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-sm btn-outline-primary" [routerLink]="['/books/edit', book.id]">
+              <i class="fa-solid fa-pen-to-square me-2"></i>
+              Edit
+            </a>
+            <button class="btn btn-sm btn-outline-danger" type="button" (click)="askDeleteBook(book)">
+              <i class="fa-solid fa-trash me-2"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="pendingDeleteBook"
+  class="modal fade show d-block"
+  tabindex="-1"
+  role="dialog"
+  aria-modal="true"
+  style="background-color: rgba(15, 23, 42, 0.55);"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Delete book?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cancelDelete()"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">
+          Are you sure you want to delete
+          <strong>{{ pendingDeleteBook.title }}</strong>?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelDelete()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

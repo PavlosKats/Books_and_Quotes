@@ -1,0 +1,103 @@
+<div class="container py-4 py-lg-5">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <span class="badge text-bg-warning-subtle text-warning-emphasis rounded-pill mb-2 px-3 py-2">
+        <i class="fa-solid fa-quote-left me-2"></i>
+        Collection
+      </span>
+      <h2 class="mb-1 fw-bold">My Quotes</h2>
+      <p class="text-muted mb-0">Keep your favorite quotes in one place.</p>
+    </div>
+
+    <a class="btn btn-primary px-4 d-inline-flex align-items-center gap-2" routerLink="/quotes/new">
+      <i class="fa-solid fa-plus"></i>
+      <span>Add Quote</span>
+    </a>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger shadow-sm border-0">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="quotes.length === 0 && !errorMessage" class="card shadow-sm border-0">
+    <div class="card-body text-center py-5 py-lg-6">
+      <i class="fa-solid fa-feather-pointed text-warning fs-1 mb-3"></i>
+      <h5 class="fw-semibold mb-2">No quotes yet</h5>
+      <p class="text-muted mb-4">Add your first quote to start collecting favorites.</p>
+      <a class="btn btn-primary px-4" routerLink="/quotes/new">
+        <i class="fa-solid fa-plus me-2"></i>
+        Add Quote
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4" *ngIf="quotes.length > 0">
+    <div class="col-12 col-lg-6" *ngFor="let quote of quotes">
+      <div class="card h-100 shadow-sm border-0 quote-card">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            <div>
+              <p class="quote-mark mb-2">
+                <i class="fa-solid fa-quote-left"></i>
+              </p>
+              <p class="card-text mb-3 fs-5 lh-base">{{ quote.content }}</p>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-2 mb-3 text-muted">
+            <span class="fw-semibold text-dark">
+              <i class="fa-solid fa-user-pen me-2"></i>
+              {{ quote.author || 'Unknown' }}
+            </span>
+            <span *ngIf="quote.bookId !== null && quote.bookId !== undefined" class="badge rounded-pill text-bg-light border">
+              <i class="fa-solid fa-book me-1"></i>
+              Book #{{ quote.bookId }}
+            </span>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-sm btn-outline-primary" [routerLink]="['/quotes/edit', quote.id]">
+              <i class="fa-solid fa-pen-to-square me-2"></i>
+              Edit
+            </a>
+            <button class="btn btn-sm btn-outline-danger" type="button" (click)="askDeleteQuote(quote)">
+              <i class="fa-solid fa-trash me-2"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="pendingDeleteQuote"
+  class="modal fade show d-block"
+  tabindex="-1"
+  role="dialog"
+  aria-modal="true"
+  style="background-color: rgba(15, 23, 42, 0.55);"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Delete quote?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cancelDelete()"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">
+          Are you sure you want to delete this quote?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelDelete()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmDelete()">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
