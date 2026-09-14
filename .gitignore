@@ -11,6 +11,7 @@ frontend/*.log
 *.user
 *.suo
 *.log
+*.db
 
 # OS and editor
 .DS_Store
