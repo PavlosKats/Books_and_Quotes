@@ -10,6 +10,18 @@ export interface Quote {
   bookId?: number | null;
 }
 
+export interface CreateQuoteRequest {
+  content: string;
+  author?: string | null;
+  bookId?: number | null;
+}
+
+export interface UpdateQuoteRequest {
+  content: string;
+  author?: string | null;
+  bookId?: number | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,6 +40,30 @@ export class QuoteService {
 
   getQuotes(): Observable<Quote[]> {
     return this.http.get<Quote[]>(this.baseUrl, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getQuote(id: number): Observable<Quote> {
+    return this.http.get<Quote>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  createQuote(data: CreateQuoteRequest): Observable<Quote> {
+    return this.http.post<Quote>(this.baseUrl, data, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  updateQuote(id: number, data: UpdateQuoteRequest): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, data, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  deleteQuote(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
       headers: this.getHeaders(),
     });
   }

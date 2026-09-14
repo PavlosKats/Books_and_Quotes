@@ -3,33 +3,87 @@
     <div class="card-body p-4">
       <h2 class="mb-4">
         <i class="fa-solid fa-pen-to-square me-2"></i>
-        Add Book
+        {{ id === null ? 'Add Book' : 'Edit Book' }}
       </h2>
 
-      <form>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="validationMessage" class="alert alert-warning">
+        {{ validationMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="title" class="form-label">Title</label>
-          <input type="text" id="title" class="form-control" />
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            name="title"
+            [(ngModel)]="title"
+            required
+          />
+          <div class="text-danger mt-1" *ngIf="submitted && !title">
+            Title is required.
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="author" class="form-label">Author</label>
-          <input type="text" id="author" class="form-control" />
+          <input
+            type="text"
+            id="author"
+            class="form-control"
+            name="author"
+            [(ngModel)]="author"
+            required
+          />
+          <div class="text-danger mt-1" *ngIf="submitted && !author">
+            Author is required.
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="yearPublished" class="form-label">Year Published</label>
-          <input type="number" id="yearPublished" class="form-control" />
+          <input
+            type="number"
+            id="yearPublished"
+            class="form-control"
+            name="yearPublished"
+            [(ngModel)]="yearPublished"
+            required
+          />
+          <div class="text-danger mt-1" *ngIf="submitted && !yearPublished">
+            Year Published is required.
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="isbn" class="form-label">ISBN</label>
-          <input type="text" id="isbn" class="form-control" />
+          <input
+            type="text"
+            id="isbn"
+            class="form-control"
+            name="isbn"
+            [(ngModel)]="isbn"
+            required
+          />
+          <div class="text-danger mt-1" *ngIf="submitted && !isbn">
+            ISBN is required.
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="coverImageUrl" class="form-label">Cover Image URL</label>
-          <input type="text" id="coverImageUrl" class="form-control" />
+          <input
+            type="text"
+            id="coverImageUrl"
+            class="form-control"
+            name="coverImageUrl"
+            [(ngModel)]="coverImageUrl"
+          />
         </div>
 
         <button type="submit" class="btn btn-primary">

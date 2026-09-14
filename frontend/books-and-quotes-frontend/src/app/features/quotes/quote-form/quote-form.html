@@ -3,23 +3,56 @@
     <div class="card-body p-4">
       <h2 class="mb-4">
         <i class="fa-solid fa-pen-to-square me-2"></i>
-        Add Quote
+        {{ id === null ? 'Add Quote' : 'Edit Quote' }}
       </h2>
 
-      <form>
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="validationMessage" class="alert alert-warning">
+        {{ validationMessage }}
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="content" class="form-label">Quote</label>
-          <textarea id="content" class="form-control" rows="4"></textarea>
+          <textarea
+            id="content"
+            class="form-control"
+            name="content"
+            rows="4"
+            [(ngModel)]="content"
+            required
+          ></textarea>
+          <div class="text-danger mt-1" *ngIf="submitted && !content">
+            Quote is required.
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="author" class="form-label">Author</label>
-          <input type="text" id="author" class="form-control" />
+          <input
+            type="text"
+            id="author"
+            class="form-control"
+            name="author"
+            [(ngModel)]="author"
+          />
         </div>
 
         <div class="mb-3">
           <label for="bookId" class="form-label">Book ID</label>
-          <input type="number" id="bookId" class="form-control" />
+          <input
+            type="number"
+            id="bookId"
+            class="form-control"
+            name="bookId"
+            [(ngModel)]="bookId"
+          />
+          <div class="form-text">
+            Optional. Leave blank if this quote is not tied to a book.
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary">

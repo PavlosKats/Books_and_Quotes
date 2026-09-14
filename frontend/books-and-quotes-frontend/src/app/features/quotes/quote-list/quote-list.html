@@ -5,7 +5,7 @@
       My Quotes
     </h2>
 
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" routerLink="/quotes/new">
       <i class="fa-solid fa-plus me-1"></i>
       Add Quote
     </button>
@@ -27,6 +27,15 @@
       <p class="card-text mb-0">
         <strong>Author:</strong> {{ quote.author || 'Unknown' }}
       </p>
+
+      <div class="mt-3 d-flex gap-2">
+        <a class="btn btn-sm btn-outline-primary" [routerLink]="['/quotes/edit', quote.id]">
+          Edit
+        </a>
+        <button class="btn btn-sm btn-outline-danger" type="button" (click)="deleteQuote(quote.id)">
+          Delete
+        </button>
+      </div>
     </div>
   </div>
 </div>
