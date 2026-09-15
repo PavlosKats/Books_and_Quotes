@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://YOUR-AZURE-BACKEND-URL/api',
+  apiBaseUrl: 'https://booksandquotes-c6b2cpcaeacbdyfr.swedencentral-01.azurewebsites.net/api',
 };
