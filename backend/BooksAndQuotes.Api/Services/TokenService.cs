@@ -18,6 +18,20 @@ public class TokenService : ITokenService
 
     public string CreateToken(AppUser user)
     {
+        var jwtKey = _configuration["Jwt:Key"];
+        var jwtIssuer = _configuration["Jwt:Issuer"];
+        var jwtAudience = _configuration["Jwt:Audience"];
+        var expiresInMinutes = _configuration["Jwt:ExpiresInMinutes"];
+
+        if (string.IsNullOrWhiteSpace(jwtKey) ||
+            string.IsNullOrWhiteSpace(jwtIssuer) ||
+            string.IsNullOrWhiteSpace(jwtAudience) ||
+            string.IsNullOrWhiteSpace(expiresInMinutes))
+        {
+            throw new InvalidOperationException(
+                "JWT configuration is missing. Set Jwt__Key, Jwt__Issuer, Jwt__Audience, and Jwt__ExpiresInMinutes in Azure App Service application settings.");
+        }
+
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -25,16 +39,16 @@ public class TokenService : ITokenService
         };
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            Encoding.UTF8.GetBytes(jwtKey));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
+            issuer: jwtIssuer,
+            audience: jwtAudience,
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(
-                double.Parse(_configuration["Jwt:ExpiresInMinutes"]!)),
+                double.Parse(expiresInMinutes)),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

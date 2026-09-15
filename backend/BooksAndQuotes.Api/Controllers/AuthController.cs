@@ -44,7 +44,15 @@ public class AuthController : ControllerBase
             return BadRequest(result.Errors);
         }
 
-        var token = _tokenService.CreateToken(user);
+        string token;
+        try
+        {
+            token = _tokenService.CreateToken(user);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
 
         return Ok(new AuthResponseDto
         {
@@ -71,7 +79,15 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid username or password.");
         }
 
-        var token = _tokenService.CreateToken(user);
+        string token;
+        try
+        {
+            token = _tokenService.CreateToken(user);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Problem(detail: ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
 
         return Ok(new AuthResponseDto
         {

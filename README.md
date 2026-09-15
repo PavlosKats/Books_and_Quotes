@@ -100,6 +100,16 @@ The intended Azure setup is:
 - Azure App Service for the backend API
 - Azure Static Web Apps for the Angular frontend
 
+The backend App Service also needs these application settings:
+
+- `ConnectionStrings__DefaultConnection`
+- `Jwt__Key`
+- `Jwt__Issuer`
+- `Jwt__Audience`
+- `Jwt__ExpiresInMinutes`
+
+Use double underscores in Azure App Service settings so ASP.NET Core maps them into configuration correctly.
+
 ## Project structure
 
 ```text
