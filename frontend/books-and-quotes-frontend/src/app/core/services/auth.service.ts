@@ -1,6 +1,7 @@
-import { inject, Injectable } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface LoginRequest {
   username: string;
@@ -22,7 +23,7 @@ export interface AuthResponse {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:5295/api/auth';
+  private readonly baseUrl = `${environment.apiBaseUrl}/auth`;
   private readonly tokenKey = 'books_and_quotes_token';
 
   register(data: RegisterRequest): Observable<AuthResponse> {

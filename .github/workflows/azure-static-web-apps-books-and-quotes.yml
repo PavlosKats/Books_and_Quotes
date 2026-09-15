@@ -1,0 +1,54 @@
+name: Build and deploy Angular app to Azure Static Web Apps - BooksAndQuotes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/books-and-quotes-frontend/**'
+      - '.github/workflows/azure-static-web-apps-books-and-quotes.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+    paths:
+      - 'frontend/books-and-quotes-frontend/**'
+      - '.github/workflows/azure-static-web-apps-books-and-quotes.yml'
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    env:
+      SKIP_DEPLOY_ON_MISSING_SECRETS: true
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: false
+
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BOOKS_AND_QUOTES }}
+          action: 'upload'
+          app_location: 'frontend/books-and-quotes-frontend'
+          api_location: ''
+          output_location: 'dist/books-and-quotes-frontend'
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_BOOKS_AND_QUOTES }}
+          action: 'close'

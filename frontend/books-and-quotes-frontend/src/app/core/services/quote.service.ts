@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../../../environments/environment';
 
 export interface Quote {
   id: number;
@@ -28,7 +29,7 @@ export interface UpdateQuoteRequest {
 export class QuoteService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private readonly baseUrl = 'http://localhost:5295/api/quotes';
+  private readonly baseUrl = `${environment.apiBaseUrl}/quotes`;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();

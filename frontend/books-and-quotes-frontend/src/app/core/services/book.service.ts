@@ -1,7 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+﻿import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { environment } from '../../../../environments/environment';
 
 export interface Book {
   id: number;
@@ -34,7 +35,7 @@ export interface UpdateBookRequest {
 export class BookService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private readonly baseUrl = 'http://localhost:5295/api/books';
+  private readonly baseUrl = `${environment.apiBaseUrl}/books`;
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
@@ -57,10 +58,10 @@ export class BookService {
   }
 
   getBook(id: number): Observable<Book> {
-  return this.http.get<Book>(`${this.baseUrl}/${id}`, {
-    headers: this.getHeaders(),
-  });
-}
+    return this.http.get<Book>(`${this.baseUrl}/${id}`, {
+      headers: this.getHeaders(),
+    });
+  }
 
   updateBook(id: number, data: UpdateBookRequest): Observable<void> {
     const url = `${this.baseUrl}/${id}`;
@@ -76,4 +77,3 @@ export class BookService {
     });
   }
 }
-
