@@ -1,33 +1,31 @@
 # Books and Quotes
 
-Books and Quotes is a full-stack web app for managing personal books and favorite quotes. It includes user registration and login, CRUD for books and quotes, a responsive interface, and light/dark theme support.
+Books and Quotes is a full-stack web application for organizing personal books and favorite quotes. It gives each user a clean place to register, log in, and manage their own collection in a responsive interface with light and dark themes.
 
-## What the app does
+## Highlights
 
-- Register and log in with a secure JWT-based auth flow
-- Add, edit, delete, and list books
-- Add, edit, delete, and list quotes
-- Keep data scoped to the signed-in user
-- Work on desktop, tablet, and mobile
-- Switch between light and dark mode
+- Secure authentication with ASP.NET Core Identity and JWT
+- Full create, read, update, and delete support for books and quotes
+- User-specific data isolation
+- Responsive layout for desktop and mobile
+- Light and dark theme support
 
-## Tech stack
+## Built With
 
-- Backend: ASP.NET Core Web API (.NET 9)
-- Authentication: ASP.NET Core Identity + JWT
-- Database: SQLite with Entity Framework Core for local development
-- Frontend: Angular 20
-- UI: Bootstrap 5 and Font Awesome
+- ASP.NET Core Web API (.NET 9)
+- ASP.NET Core Identity and JWT authentication
+- Angular 20
+- SQLite and Entity Framework Core
+- Bootstrap 5 and Font Awesome
 
-## Running locally
+## Getting Started
 
-### Requirements
+### Prerequisites
 
 - .NET 9 SDK
 - Node.js and npm
-- Angular CLI dependencies installed through npm
 
-### 1. Start the backend
+### Backend
 
 Open a terminal in the backend folder:
 
@@ -47,11 +45,9 @@ Then start the API:
 dotnet run
 ```
 
-The backend runs at:
+The backend runs at `http://localhost:5295`.
 
-- `http://localhost:5295`
-
-### 2. Start the frontend
+### Frontend
 
 Open another terminal in the frontend folder:
 
@@ -77,49 +73,14 @@ or:
 ng serve
 ```
 
-The frontend runs at:
+The frontend runs at `http://localhost:4200`.
 
-- `http://localhost:4200`
-
-### 3. Open the app
-
-Visit the frontend URL in your browser and use the app normally.
-
-## Notes
-
-- If you see `SQLite Error 1: 'no such table: AspNetUsers'`, run `dotnet ef database update` in the backend folder.
-- The local SQLite database is not committed to source control.
-- If you run the backend in WSL, make sure WSL has .NET 9 installed.
-- The app uses a JWT secret stored in user secrets for local development.
-
-## Deployment
-
-The intended Azure setup is:
-
-- Azure SQL Database for production data
-- Azure App Service for the backend API
-- Azure Static Web Apps for the Angular frontend
-
-The backend App Service also needs these application settings:
-
-- `ConnectionStrings__DefaultConnection`
-- `Jwt__Key`
-- `Jwt__Issuer`
-- `Jwt__Audience`
-- `Jwt__ExpiresInMinutes`
-
-Use double underscores in Azure App Service settings so ASP.NET Core maps them into configuration correctly.
-
-## Project structure
+## Project Structure
 
 ```text
 Books_and_Quotes/
-├── backend/
-│   └── BooksAndQuotes.Api/
-└── frontend/
-    └── books-and-quotes-frontend/
+|-- backend/
+|   `-- BooksAndQuotes.Api/
+`-- frontend/
+    `-- books-and-quotes-frontend/
 ```
-
-## License
-
-This project is provided for educational and demonstration purposes.
